@@ -5,12 +5,14 @@ import Checkout from "../assets/icons/checkout.svg";
 import { getImageUrl } from "../utils/cine-utility";
 
 const CartDetails = ({ onCancel }) => {
-  const { cartData, setCartData } = useContext(MovieContext);
-
-  const handleDeleteCart = (e, id) => {
+  const { state, dispatch } = useContext(MovieContext);
+  console.log(state);
+  const handleDeleteCart = (e, item) => {
     e.preventDefault();
-    const filteredItems = cartData.filter((item) => item.id !== id);
-    setCartData([...filteredItems]);
+    dispatch({
+      type: "REMOVE_FROM_CART",
+      payload: item,
+    });
   };
 
   return (
@@ -23,43 +25,47 @@ const CartDetails = ({ onCancel }) => {
               Your Carts
             </h2>
             <div className="space-y-8 lg:space-y-12 max-h-[450px] overflow-auto mb-10 lg:mb-14">
-              {cartData.length === 0 ? (
+              {state.cartData.length === 0 ? (
                 <p className="text-3xl">No movie added to the cart</p>
               ) : (
-                cartData.map((item) => (
-                  <div
-                    key={item.id}
-                    className="grid grid-cols-[1fr_auto] gap-4"
-                  >
-                    <div className="flex items-center gap-4">
-                      <img
-                        className="rounded overflow-hidden"
-                        src={getImageUrl(item.cover)}
-                        alt={item.title}
-                        width={"50px"}
-                        height={"50px"}
-                      />
-                      <div>
-                        <h3 className="text-base md:text-xl font-bold">
-                          {item.title}
-                        </h3>
-                        <p className="max-md:text-xs text-[#575A6E]">
-                          {item.genre}
-                        </p>
-                        <span className="max-md:text-xs">${item.price}</span>
+                state.cartData.map((item) => {
+                  console.log(item);
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="grid grid-cols-[1fr_auto] gap-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <img
+                          className="rounded overflow-hidden"
+                          src={getImageUrl(item.cover)}
+                          alt={item.title}
+                          width={"50px"}
+                          height={"50px"}
+                        />
+                        <div>
+                          <h3 className="text-base md:text-xl font-bold">
+                            {item.title}
+                          </h3>
+                          <p className="max-md:text-xs text-[#575A6E]">
+                            {item.genre}
+                          </p>
+                          <span className="max-md:text-xs">${item.price}</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between gap-4 items-center">
+                        <button
+                          onClick={(e) => handleDeleteCart(e, item)}
+                          className="bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white"
+                        >
+                          <img className="w-5 h-5" src={Remove} alt="delete" />
+                          <span className="max-md:hidden">Remove</span>
+                        </button>
                       </div>
                     </div>
-                    <div className="flex justify-between gap-4 items-center">
-                      <button
-                        onClick={(e) => handleDeleteCart(e, item.id)}
-                        className="bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white"
-                      >
-                        <img className="w-5 h-5" src={Remove} alt="delete" />
-                        <span className="max-md:hidden">Remove</span>
-                      </button>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
             <div className="flex items-center justify-end gap-2">
