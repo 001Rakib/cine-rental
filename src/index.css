@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@layer components {
+  .container {
+    center: true;
+    padding: "1.25rem";
+  }
+}
+.dark {
+  @apply bg-[#171923] text-white;
+}
+
+@theme {
+  --color-primary: #00d991;
+  --color-dark: #171923;
+  --color-light: #fff;
+  --color-body: #1d1e28;
+}
